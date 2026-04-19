@@ -1,0 +1,14 @@
+{
+  "name": "vocastream-pwa",
+  "version": "1.0.0",
+  "description": "Premium Text-to-Speech PWA — works on Vercel and Netlify",
+  "dependencies": {
+    "bcryptjs":   "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb":    "^6.3.0",
+    "node-fetch": "^2.7.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

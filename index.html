@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#7c3aed" />
+  <meta name="description" content="Premium Text-to-Speech PWA with dual engine support" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="VocaStream" />
+
+  <title>VocaStream — Premium TTS</title>
+
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-192.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="/css/styles.css" />
+
+  <!-- CDN Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     VIDEO BACKGROUND SYSTEM
+     3 videos, page-specific, smooth crossfade transitions
+     ═══════════════════════════════════════════════════════ -->
+<div id="bg-video-wrap">
+  <!-- Auth: Dark sound wave wireframe -->
+  <video id="bg-auth" class="bg-video active"
+    src="/videos/bg-auth.webm"
+    autoplay muted loop playsinline preload="auto"
+    aria-hidden="true">
+  </video>
+  <!-- Studio: Teal molecular network -->
+  <video id="bg-studio" class="bg-video"
+    src="/videos/bg-studio.webm"
+    muted loop playsinline preload="none"
+    aria-hidden="true">
+  </video>
+  <!-- History: Holographic cyan cube -->
+  <video id="bg-history" class="bg-video"
+    src="/videos/bg-history.webm"
+    muted loop playsinline preload="none"
+    aria-hidden="true">
+  </video>
+  <!-- Dark overlay — keeps glassmorphism cards readable -->
+  <div id="bg-overlay"></div>
+</div>
+
+<!-- Particle canvas on top for extra depth -->
+<canvas id="bg-canvas"></canvas>
+
+<!-- App Root -->
+<div id="app">
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: LANDING
+       ═══════════════════════════════════════════════════════════ -->
+  <div id="page-landing" class="page landing-page">
+
+    <header class="landing-nav">
+      <div class="landing-nav-logo">
+        <div class="logo-mark">🎙️</div>
+        <span>VocaStream</span>
+      </div>
+      <button class="btn-landing-signin" id="landing-signin">Sign In</button>
+    </header>
+
+    <section class="landing-hero">
+      <div class="landing-copy">
+        <div class="landing-badge"><span class="badge-dot"></span> AI-Powered Text to Speech</div>
+        <h1 class="landing-headline">
+          Your Words.<br/>
+          <span class="gradient-text">Any Voice.</span><br/>
+          Any Language.
+        </h1>
+        <p class="landing-sub">
+          Convert text, PDFs, handwritten notes, and web pages into natural speech
+          using browser-native voices or our AI engine — offline-ready, lightning fast.
+        </p>
+        <div class="landing-pills">
+          <span class="pill">🌐 Web Speech API</span>
+          <span class="pill">🤖 AI Natural Voice</span>
+          <span class="pill">📄 PDF &amp; DOCX</span>
+          <span class="pill">✍️ OCR Handwriting</span>
+          <span class="pill">🔗 URL Fetch</span>
+          <span class="pill">📴 Works Offline</span>
+        </div>
+        <div class="landing-cta-row">
+          <button class="btn-primary btn-cta" id="landing-get-started">
+            <span class="btn-text">Get Started Free →</span>
+            <div class="spinner"></div>
+          </button>
+          <div class="cta-note">No credit card · Free forever</div>
+        </div>
+      </div>
+
+      <div class="landing-3d-wrap">
+        <canvas id="landing-3d"></canvas>
+        <div class="ring ring-1"></div>
+        <div class="ring ring-2"></div>
+        <div class="ring ring-3"></div>
+      </div>
+    </section>
+
+    <section class="landing-features">
+      <div class="feature-card"><div class="feat-icon">🎙️</div><h3>Dual TTS Engines</h3><p>Switch between browser-native Web Speech API or our AI natural voice trained on Hindi, English, Bengali &amp; Odia.</p></div>
+      <div class="feature-card"><div class="feat-icon">📄</div><h3>Any File Format</h3><p>Upload PDFs, Word documents, plain text, or entire folders. Text extracted instantly and made ready to speak.</p></div>
+      <div class="feature-card"><div class="feat-icon">✍️</div><h3>OCR Handwriting</h3><p>Photograph handwritten notes. Tesseract OCR recognizes text in 4 languages directly in your browser.</p></div>
+      <div class="feature-card"><div class="feat-icon">🔗</div><h3>Read Any Webpage</h3><p>Paste any URL and we fetch the article server-side and read it aloud — great for news and research papers.</p></div>
+      <div class="feature-card"><div class="feat-icon">📴</div><h3>Works Offline</h3><p>Fully installable PWA. Web Speech engine and all app assets cached by service worker — use it on a plane.</p></div>
+      <div class="feature-card"><div class="feat-icon">📋</div><h3>History &amp; Replay</h3><p>Every session saved to your account. Replay any previous text instantly — pick up where you left off.</p></div>
+    </section>
+
+    <section class="landing-langs">
+      <div class="langs-label">Natural Voice Engine supports</div>
+      <div class="langs-row">
+        <div class="lang-chip">🇮🇳 Hindi</div>
+        <div class="lang-chip">🇬🇧 English</div>
+        <div class="lang-chip">🇧🇩 Bengali</div>
+        <div class="lang-chip">🏳️ Odia</div>
+      </div>
+    </section>
+
+    <section class="landing-footer-cta">
+      <h2>Ready to listen smarter?</h2>
+      <p>Join now and convert your first text in under 30 seconds.</p>
+      <button class="btn-primary btn-cta" id="landing-footer-cta-btn">
+        <span class="btn-text">Start for Free →</span>
+        <div class="spinner"></div>
+      </button>
+    </section>
+
+    <footer class="landing-footer">
+      <span>© 2025 VocaStream · Built with ❤️</span>
+    </footer>
+  </div><!-- /page-landing -->
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: AUTH
+       ═══════════════════════════════════════════════════════════ -->
+  <div id="page-auth" class="page">
+    <div class="auth-container">
+      <div class="auth-logo">
+        <div class="logo-icon">🎙️</div>
+        <h1>VocaStream</h1>
+        <p>Premium Text-to-Speech Studio</p>
+      </div>
+
+      <div class="auth-card">
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">Sign In</button>
+          <button class="auth-tab" data-tab="register">Create Account</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form active" autocomplete="on">
+          <div class="field-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" name="email"
+                   placeholder="you@example.com" autocomplete="email" required />
+          </div>
+          <div class="field-group">
+            <label for="login-password">Password</label>
+            <input type="password" id="login-password" name="password"
+                   placeholder="••••••••" autocomplete="current-password" required />
+          </div>
+          <button type="submit" class="btn-primary" id="login-btn">
+            <span class="btn-text">Sign In →</span>
+            <div class="spinner"></div>
+          </button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" class="auth-form" autocomplete="on">
+          <div class="field-group">
+            <label for="reg-email">Email Address</label>
+            <input type="email" id="reg-email" name="email"
+                   placeholder="you@example.com" autocomplete="email" required />
+          </div>
+          <div class="field-group">
+            <label for="reg-password">Password</label>
+            <input type="password" id="reg-password" name="password"
+                   placeholder="Min 8 characters" autocomplete="new-password" required minlength="8" />
+          </div>
+          <div class="field-group">
+            <label for="reg-confirm">Confirm Password</label>
+            <input type="password" id="reg-confirm" name="confirm"
+                   placeholder="Repeat password" autocomplete="new-password" required />
+          </div>
+          <button type="submit" class="btn-primary" id="register-btn">
+            <span class="btn-text">Create Account →</span>
+            <div class="spinner"></div>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       PAGE: MAIN APP
+       ═══════════════════════════════════════════════════════════ -->
+  <div id="page-main" class="page" style="flex-direction:column;">
+
+    <!-- Top Navigation -->
+    <nav class="topnav">
+      <a href="#/app" class="nav-logo">
+        <div class="logo-mark">🎙️</div>
+        <span>VocaStream</span>
+      </a>
+
+      <div class="nav-links">
+        <a class="nav-link" href="#/app" data-route="/app">
+          🎵 Studio
+        </a>
+        <a class="nav-link" href="#/history" data-route="/history">
+          📋 History
+        </a>
+      </div>
+
+      <div class="nav-user">
+        <div class="offline-badge" id="offline-badge">
+          <span>●</span> Offline
+        </div>
+        <span class="user-email" id="user-email-display"></span>
+        <button class="btn-logout" id="logout-btn">Sign Out</button>
+      </div>
+    </nav>
+
+    <!-- ─── STUDIO VIEW ──────────────────────────────────────── -->
+    <div id="view-studio" class="main-content" style="display:none;">
+      <div class="section-title">
+        <div class="icon">🎵</div>
+        TTS Studio
+      </div>
+
+      <div class="glass-card">
+
+        <!-- Engine Toggle -->
+        <div class="engine-toggle-wrap">
+          <div class="engine-label">Choose Engine</div>
+          <div class="engine-toggle">
+            <button class="engine-btn active" id="engine-webspeech" data-engine="webspeech">
+              <span class="e-icon">🌐</span>
+              <span class="e-name">Web Speech API</span>
+              <span class="e-sub">All browser voices • Offline</span>
+            </button>
+            <button class="engine-btn" id="engine-natural" data-engine="natural">
+              <span class="e-icon">🤖</span>
+              <span class="e-name">Natural Voice</span>
+              <span class="e-sub">Hindi · English · Bengali · Odia</span>
+            </button>
+          </div>
+          <div class="natural-offline-notice" id="natural-offline-notice">
+            ⚠️ Natural Voice Engine requires an internet connection. Switch to Web Speech API for offline use.
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Input Source Tabs -->
+        <div class="input-tabs-header" role="tablist">
+          <button class="tab-btn active" data-tab="text" role="tab">✏️ Text</button>
+          <button class="tab-btn" data-tab="file" role="tab">📄 File</button>
+          <button class="tab-btn" data-tab="folder" role="tab">📁 Folder</button>
+          <button class="tab-btn" data-tab="ocr" role="tab">✍️ OCR</button>
+          <button class="tab-btn" data-tab="url" role="tab">🔗 URL</button>
+        </div>
+
+        <!-- TAB: Text -->
+        <div class="tab-panel active" id="tab-text">
+          <textarea class="tts-textarea" id="main-text"
+            placeholder="Type or paste your text here... Press the play button to convert to speech."
+            rows="6"></textarea>
+          <div class="char-count"><span id="char-count">0</span> characters</div>
+        </div>
+
+        <!-- TAB: File -->
+        <div class="tab-panel" id="tab-file">
+          <div class="dropzone" id="file-dropzone">
+            <input type="file" id="file-input" accept=".pdf,.docx,.txt,.doc" />
+            <span class="dropzone-icon">📄</span>
+            <div class="dropzone-title">Drop a file here or click to browse</div>
+            <div class="dropzone-sub">Supports PDF, DOCX, TXT</div>
+            <div class="dropzone-formats">Max 20MB per file</div>
+          </div>
+          <div class="file-preview" id="file-preview"></div>
+          <div id="file-extracted-wrap" style="display:none;">
+            <div class="extracted-label">Extracted Text (editable)</div>
+            <textarea class="tts-textarea" id="file-extracted-text" rows="5" placeholder="Extracted text will appear here..."></textarea>
+          </div>
+        </div>
+
+        <!-- TAB: Folder -->
+        <div class="tab-panel" id="tab-folder">
+          <div class="dropzone" id="folder-dropzone">
+            <input type="file" id="folder-input" webkitdirectory multiple
+                   accept=".pdf,.docx,.txt" />
+            <span class="dropzone-icon">📁</span>
+            <div class="dropzone-title">Drop a folder or click to choose</div>
+            <div class="dropzone-sub">All PDF, DOCX, TXT files will be extracted</div>
+            <div class="dropzone-formats">Files are processed in order</div>
+          </div>
+          <div class="file-preview" id="folder-file-list"></div>
+          <div id="folder-extracted-wrap" style="display:none;">
+            <div class="extracted-label">Combined Text (editable)</div>
+            <textarea class="tts-textarea" id="folder-extracted-text" rows="5"></textarea>
+          </div>
+        </div>
+
+        <!-- TAB: OCR -->
+        <div class="tab-panel" id="tab-ocr">
+          <div class="dropzone" id="ocr-dropzone">
+            <input type="file" id="ocr-input" accept="image/*" />
+            <span class="dropzone-icon">✍️</span>
+            <div class="dropzone-title">Upload a photo of handwritten notes</div>
+            <div class="dropzone-sub">Supports JPG, PNG, WEBP, HEIC</div>
+            <div class="dropzone-formats">Tesseract OCR — Hindi · English · Bengali · Odia</div>
+          </div>
+          <img id="ocr-preview" class="ocr-preview" alt="Preview" />
+          <div class="ocr-progress" id="ocr-progress">
+            <div class="progress-text" id="ocr-progress-text">Initializing OCR engine...</div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="ocr-progress-fill"></div>
+            </div>
+          </div>
+          <div id="ocr-extracted-wrap" style="display:none;">
+            <div class="extracted-label">OCR Result (editable)</div>
+            <textarea class="tts-textarea" id="ocr-text" rows="5" placeholder="Recognized text will appear here..."></textarea>
+          </div>
+
+          <!-- OCR Language selector -->
+          <div class="control-group" style="margin-top:16px;">
+            <label>OCR Language</label>
+            <select class="control-select" id="ocr-lang-select">
+              <option value="eng">English</option>
+              <option value="hin">Hindi</option>
+              <option value="ben">Bengali</option>
+              <option value="ori">Odia</option>
+              <option value="eng+hin">English + Hindi</option>
+              <option value="eng+hin+ben+ori">All Languages</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- TAB: URL -->
+        <div class="tab-panel" id="tab-url">
+          <div class="url-input-row">
+            <input type="url" class="url-input" id="url-input"
+                   placeholder="https://example.com/article..." />
+            <button class="btn-fetch" id="url-fetch-btn">Fetch →</button>
+          </div>
+          <div id="url-extracted-wrap" style="display:none; margin-top:16px;">
+            <div class="extracted-label">Extracted Content (editable)</div>
+            <textarea class="tts-textarea" id="url-extracted-text" rows="5"></textarea>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Voice / Language Controls -->
+        <div class="controls-grid">
+
+          <!-- Web Speech: voice selector -->
+          <div class="control-group" id="voice-control">
+            <label>Voice</label>
+            <select class="control-select" id="voice-select">
+              <option value="">Loading voices...</option>
+            </select>
+          </div>
+
+          <!-- Natural Engine: language selector -->
+          <div class="control-group" id="lang-control" style="display:none;">
+            <label>Language</label>
+            <select class="control-select" id="lang-select">
+              <option value="en">🇬🇧 English (Indian)</option>
+              <option value="hi">🇮🇳 Hindi</option>
+              <option value="bn">🇧🇩 Bengali</option>
+              <option value="or">🏳️ Odia</option>
+            </select>
+          </div>
+
+          <!-- Natural Engine: Sarvam speaker selector -->
+          <div class="control-group" id="speaker-control" style="display:none;">
+            <label>AI Voice</label>
+            <select class="control-select" id="speaker-select">
+              <optgroup label="Female Voices">
+                <option value="meera">Meera (Female)</option>
+                <option value="ananya">Ananya (Female)</option>
+                <option value="diya">Diya (Female)</option>
+                <option value="nisha">Nisha (Female)</option>
+                <option value="maitreyi">Maitreyi (Female)</option>
+              </optgroup>
+              <optgroup label="Male Voices">
+                <option value="shubh">Shubh (Male)</option>
+                <option value="arjun">Arjun (Male)</option>
+                <option value="vian">Vian (Male)</option>
+                <option value="amol">Amol (Male)</option>
+                <option value="aakash">Aakash (Male)</option>
+              </optgroup>
+            </select>
+          </div>
+
+          <!-- Rate -->
+          <div class="control-group">
+            <label>Speed</label>
+            <div class="slider-wrap">
+              <input type="range" id="rate-slider" min="0.5" max="2" step="0.1" value="1" />
+              <span class="slider-val" id="rate-val">1.0x</span>
+            </div>
+          </div>
+
+          <!-- Pitch (Web Speech only) -->
+          <div class="control-group" id="pitch-control">
+            <label>Pitch</label>
+            <div class="slider-wrap">
+              <input type="range" id="pitch-slider" min="0" max="2" step="0.1" value="1" />
+              <span class="slider-val" id="pitch-val">1.0</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Playback Bar -->
+        <div class="playback-bar">
+          <button class="ctrl-btn" id="stop-btn" title="Stop" disabled>⏹</button>
+          <button class="play-btn" id="play-btn" title="Play / Pause" disabled>▶</button>
+          <div class="waveform-wrap" id="waveform"></div>
+          <div class="playback-status" id="playback-status">Idle</div>
+        </div>
+
+      </div><!-- /glass-card -->
+    </div><!-- /view-studio -->
+
+    <!-- ─── HISTORY VIEW ──────────────────────────────────────── -->
+    <div id="view-history" class="main-content" style="display:none;">
+      <div class="section-title">
+        <div class="icon">📋</div>
+        TTS History
+      </div>
+      <div class="history-list" id="history-list">
+        <!-- Skeleton loader -->
+        <div class="skeleton" style="height:72px; border-radius:12px;"></div>
+        <div class="skeleton" style="height:72px; border-radius:12px;"></div>
+        <div class="skeleton" style="height:72px; border-radius:12px;"></div>
+      </div>
+    </div>
+
+  </div><!-- /page-main -->
+
+</div><!-- /app -->
+
+<!-- Toast Container -->
+<div id="toast-container"></div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loader-ring"></div>
+  <div class="loader-text" id="loading-text">Processing...</div>
+</div>
+
+<!-- Scripts (modules) -->
+<script type="module" src="/js/app.js"></script>
+
+</body>
+</html>
