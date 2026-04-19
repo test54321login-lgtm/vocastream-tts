@@ -269,7 +269,7 @@ export function getChunkInfo() {
 // ══════════════════════════════════════════════════════════════════════════
 const NATURAL_MAX_CHARS = 5000;
 
-async function speakNatural(text, { language = 'en', speaker = 'anushka' } = {}) {
+async function speakNatural(text, { language = 'en', speaker = 'priya' } = {}) {
   if (!navigator.onLine) {
     showToast('Natural Voice Engine requires internet connection.', 'error');
     return;
