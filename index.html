@@ -88,7 +88,7 @@
         </p>
         <div class="landing-pills">
           <span class="pill">🌐 Web Speech API</span>
-          <span class="pill">🤖 AI Natural Voice</span>
+          <span class="pill">🤖 AI Natural Voice (11 langs)</span>
           <span class="pill">📄 PDF &amp; DOCX</span>
           <span class="pill">✍️ OCR Handwriting</span>
           <span class="pill">🔗 URL Fetch</span>
@@ -112,7 +112,7 @@
     </section>
 
     <section class="landing-features">
-      <div class="feature-card"><div class="feat-icon">🎙️</div><h3>Dual TTS Engines</h3><p>Switch between browser-native Web Speech API or our AI natural voice trained on Hindi, English, Bengali &amp; Odia.</p></div>
+      <div class="feature-card"><div class="feat-icon">🎙️</div><h3>Dual TTS Engines</h3><p>Switch between browser-native Web Speech API or our AI natural voice trained on 11 Indian languages including Hindi, Tamil, Telugu, Bengali, Kannada and more.</p></div>
       <div class="feature-card"><div class="feat-icon">📄</div><h3>Any File Format</h3><p>Upload PDFs, Word documents, plain text, or entire folders. Text extracted instantly and made ready to speak.</p></div>
       <div class="feature-card"><div class="feat-icon">✍️</div><h3>OCR Handwriting</h3><p>Photograph handwritten notes. Tesseract OCR recognizes text in 4 languages directly in your browser.</p></div>
       <div class="feature-card"><div class="feat-icon">🔗</div><h3>Read Any Webpage</h3><p>Paste any URL and we fetch the article server-side and read it aloud — great for news and research papers.</p></div>
@@ -123,10 +123,17 @@
     <section class="landing-langs">
       <div class="langs-label">Natural Voice Engine supports</div>
       <div class="langs-row">
-        <div class="lang-chip">🇮🇳 Hindi</div>
         <div class="lang-chip">🇬🇧 English</div>
+        <div class="lang-chip">🇮🇳 Hindi</div>
         <div class="lang-chip">🇧🇩 Bengali</div>
         <div class="lang-chip">🏳️ Odia</div>
+        <div class="lang-chip">🇮🇳 Tamil</div>
+        <div class="lang-chip">🇮🇳 Telugu</div>
+        <div class="lang-chip">🇮🇳 Kannada</div>
+        <div class="lang-chip">🇮🇳 Malayalam</div>
+        <div class="lang-chip">🇮🇳 Marathi</div>
+        <div class="lang-chip">🇮🇳 Gujarati</div>
+        <div class="lang-chip">🇮🇳 Punjabi</div>
       </div>
     </section>
 
@@ -377,7 +384,7 @@
             </select>
           </div>
 
-          <!-- Natural Engine: language selector -->
+          <!-- Natural Engine: language selector (all 11 Sarvam AI languages) -->
           <div class="control-group" id="lang-control" style="display:none;">
             <label>Language</label>
             <select class="control-select" id="lang-select">
@@ -385,26 +392,67 @@
               <option value="hi">🇮🇳 Hindi</option>
               <option value="bn">🇧🇩 Bengali</option>
               <option value="or">🏳️ Odia</option>
+              <option value="ta">🇮🇳 Tamil</option>
+              <option value="te">🇮🇳 Telugu</option>
+              <option value="kn">🇮🇳 Kannada</option>
+              <option value="ml">🇮🇳 Malayalam</option>
+              <option value="mr">🇮🇳 Marathi</option>
+              <option value="gu">🇮🇳 Gujarati</option>
+              <option value="pa">🇮🇳 Punjabi</option>
             </select>
           </div>
 
-          <!-- Natural Engine: Sarvam speaker selector -->
+          <!-- Natural Engine: Sarvam speaker selector (exact names from Sarvam AI) -->
           <div class="control-group" id="speaker-control" style="display:none;">
             <label>AI Voice</label>
             <select class="control-select" id="speaker-select">
               <optgroup label="Female Voices">
-                <option value="meera">Meera (Female)</option>
-                <option value="ananya">Ananya (Female)</option>
-                <option value="diya">Diya (Female)</option>
-                <option value="nisha">Nisha (Female)</option>
-                <option value="maitreyi">Maitreyi (Female)</option>
+                <option value="anushka">Anushka (Female)</option>
+                <option value="manisha">Manisha (Female)</option>
+                <option value="vidya">Vidya (Female)</option>
+                <option value="arya">Arya (Female)</option>
+                <option value="ritu">Ritu (Female)</option>
+                <option value="priya">Priya (Female)</option>
+                <option value="neha">Neha (Female)</option>
+                <option value="pooja">Pooja (Female)</option>
+                <option value="simran">Simran (Female)</option>
+                <option value="kavya">Kavya (Female)</option>
+                <option value="ishita">Ishita (Female)</option>
+                <option value="shreya">Shreya (Female)</option>
+                <option value="tanya">Tanya (Female)</option>
+                <option value="roopa">Roopa (Female)</option>
+                <option value="shruti">Shruti (Female)</option>
+                <option value="suhani">Suhani (Female)</option>
+                <option value="kavitha">Kavitha (Female)</option>
+                <option value="rupali">Rupali (Female)</option>
               </optgroup>
               <optgroup label="Male Voices">
+                <option value="abhilash">Abhilash (Male)</option>
+                <option value="karun">Karun (Male)</option>
+                <option value="hitesh">Hitesh (Male)</option>
+                <option value="aditya">Aditya (Male)</option>
+                <option value="rahul">Rahul (Male)</option>
+                <option value="rohan">Rohan (Male)</option>
+                <option value="amit">Amit (Male)</option>
+                <option value="dev">Dev (Male)</option>
+                <option value="ratan">Ratan (Male)</option>
+                <option value="varun">Varun (Male)</option>
+                <option value="manan">Manan (Male)</option>
+                <option value="sumit">Sumit (Male)</option>
+                <option value="kabir">Kabir (Male)</option>
+                <option value="aayan">Aayan (Male)</option>
                 <option value="shubh">Shubh (Male)</option>
-                <option value="arjun">Arjun (Male)</option>
-                <option value="vian">Vian (Male)</option>
-                <option value="amol">Amol (Male)</option>
-                <option value="aakash">Aakash (Male)</option>
+                <option value="ashutosh">Ashutosh (Male)</option>
+                <option value="advait">Advait (Male)</option>
+                <option value="anand">Anand (Male)</option>
+                <option value="tarun">Tarun (Male)</option>
+                <option value="sunny">Sunny (Male)</option>
+                <option value="mani">Mani (Male)</option>
+                <option value="gokul">Gokul (Male)</option>
+                <option value="vijay">Vijay (Male)</option>
+                <option value="mohit">Mohit (Male)</option>
+                <option value="rehan">Rehan (Male)</option>
+                <option value="soham">Soham (Male)</option>
               </optgroup>
             </select>
           </div>

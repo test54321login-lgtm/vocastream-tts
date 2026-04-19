@@ -638,7 +638,7 @@ function buildTTSOptions() {
     };
   }
   return { language: document.getElementById('lang-select')?.value || 'en',
-           speaker:  document.getElementById('speaker-select')?.value || 'meera',
+           speaker:  document.getElementById('speaker-select')?.value || 'anushka',
            rate };
 }
 
